@@ -1,0 +1,950 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+ <meta charset="utf-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+ <meta name="theme-color" content="#f3a58f">
+ <meta name="description" content="Se aconchegue nessa fofura de viagem!">
+ <title>Entrega dos Pets.｡ *ﾟ🐈+.⠀ .</title>
+ <link rel="preconnect" href="https://fonts.googleapis.com">
+ <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+ <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Nunito:wght@400;500;600;700;800;900&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+ <style>
+    :root {
+      --ink:#564653; --ink-soft:#7d6a79;
+      --sky-top:#eaa0a0; --sky-mid:#f4b8a0; --sky-bottom:#fff0d4; --sky-glow:#ffd5b2;
+    }
+    *{box-sizing:border-box}
+    html,body{width:100%;height:100%;margin:0}
+    body{overflow:hidden;color:var(--ink);font-family:'Nunito','Trebuchet MS',sans-serif;background:var(--sky-bottom)}
+    button{font:inherit;color:inherit}
+    button:focus-visible{outline:3px solid #ab8bb1;outline-offset:3px}
+    #site-shell{position:relative;width:100%;height:100%;height:100dvh;min-height:440px;overflow:hidden;isolation:isolate;background:radial-gradient(ellipse at 71% 23%,var(--sky-glow) 0%,transparent 41%),linear-gradient(165deg,var(--sky-top) 0%,var(--sky-mid) 53%,var(--sky-bottom) 100%);transition:background 5s linear}
+    #scene-wrap{position:absolute;inset:0;z-index:0;overflow:hidden}
+    #scene-wrap canvas{display:block;width:100%;height:100%;touch-action:none;outline:0}
+    .sky-stars{position:absolute;z-index:1;inset:0;pointer-events:none;opacity:0;transition:opacity 6s ease;background-image:radial-gradient(1.4px 1.4px at 10% 18%,#fff 50%,transparent 100%),radial-gradient(1px 1px at 18% 64%,#fff 50%,transparent 100%),radial-gradient(1.6px 1.6px at 33% 27%,#fff4e8 50%,transparent 100%),radial-gradient(1px 1px at 56% 12%,#fff 50%,transparent 100%),radial-gradient(1.6px 1.6px at 68% 47%,#fff7e7 50%,transparent 100%),radial-gradient(1px 1px at 83% 19%,#fff 50%,transparent 100%),radial-gradient(1.2px 1.2px at 91% 67%,#fff 50%,transparent 100%),radial-gradient(1px 1px at 44% 73%,#ffffffcc 50%,transparent 100%)}
+    .topbar{position:absolute;z-index:4;top:max(16px,env(safe-area-inset-top));left:clamp(12px,2.5vw,30px);right:clamp(12px,2.5vw,30px);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;pointer-events:none}
+    .brand,.time-chip{pointer-events:auto;border:1px solid #654e5d20;background:rgba(255,250,245,.74);box-shadow:0 7px 24px #4c344a0c;backdrop-filter:blur(14px)}
+    .brand{display:flex;align-items:center;gap:10px;padding:8px 15px 8px 8px;border-radius:19px;color:var(--ink);text-decoration:none}
+    .brand-mark{display:grid;place-items:center;width:39px;height:39px;border-radius:14px;background:#d7e7d5;color:#568b79;font-size:23px}
+    .brand-copy{line-height:1.05}.brand-copy strong{display:block;font-size:12px;font-weight:900}.brand-copy em{display:block;margin-top:3px;font:italic 16px 'Playfair Display',Georgia,serif;color:#af6f88}
+    .time-chip{display:flex;align-items:center;gap:9px;padding:8px 13px;border-radius:16px;color:var(--ink)}
+    .time-sun{display:grid;place-items:center;width:34px;height:34px;border-radius:12px;background:#fff9efb8;font-size:20px;color:#c17b77}
+    .time-chip strong,.time-chip small{display:block}.time-chip strong{font-size:11px;font-weight:900}.time-chip small{margin-top:2px;color:var(--ink-soft);font:10px 'DM Mono',monospace}
+    .time-tools{position:relative;display:flex;align-items:flex-start;gap:8px;pointer-events:auto}
+    .time-picker{position:relative}
+    .time-picker-toggle{display:flex;align-items:center;gap:7px;padding:12px 13px;border:1px solid #654e5d20;border-radius:15px;background:rgba(255,250,245,.78);box-shadow:0 7px 24px #4c344a0c;backdrop-filter:blur(14px);font-size:10px;font-weight:900;cursor:pointer;white-space:nowrap}
+    .time-picker-toggle span{color:#b16f8b;font-size:14px}
+    .time-options{position:absolute;top:calc(100% + 8px);right:0;display:grid;gap:5px;min-width:184px;padding:8px;border:1px solid #654e5d20;border-radius:17px;background:rgba(255,250,246,.96);box-shadow:0 14px 38px #4f364c21;backdrop-filter:blur(16px)}
+    .time-options[hidden]{display:none!important}
+    .time-options-note{margin:3px 5px 5px;color:#8f7888;font-size:10px;line-height:1.5;max-width:220px}
+    .time-option{display:flex;align-items:center;gap:9px;width:100%;padding:9px 11px;border:1px solid transparent;border-radius:11px;background:transparent;text-align:left;font-size:11px;font-weight:800;cursor:pointer}
+    .time-option span{width:25px;font-size:16px;text-align:center}
+    .time-option:hover,.time-option[aria-pressed="true"]{border-color:#d9b0c0;background:#f8e9ed}
+    .time-option small{display:block;margin-top:1px;color:#9a8493;font-size:9px;font-weight:600}
+    .intro-card{position:absolute;z-index:3;left:clamp(16px,4.5vw,64px);top:51%;transform:translateY(-48%);width:min(340px,calc(100% - 32px));padding:25px 25px 21px;border:1px solid #6f4b601f;border-radius:26px;background:rgba(255,250,245,.82);box-shadow:0 22px 66px #4f364c22;backdrop-filter:blur(16px);transition:opacity .35s ease,transform .35s ease}
+    .intro-card.dismissed{opacity:0;transform:translate(-12px,-44%);pointer-events:none}
+    .eyebrow{color:#b17d94;font:9px 'DM Mono',monospace;letter-spacing:.13em;line-height:1.55;text-transform:uppercase}
+    .intro-card h1{margin:13px 0 11px;font:600 clamp(29px,3.5vw,39px)/1.07 'Playfair Display',Georgia,serif;letter-spacing:-.045em}
+    .intro-card h1 span{color:#b96f8d}.intro-card p{margin:0;color:#756775;font-size:13px;line-height:1.85}
+    .tag-row{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px}.tag-row span{padding:6px 9px;border:1px solid #996a8317;border-radius:9px;background:#f4e6e1;color:#877181;font-size:10px}
+    .text-button{display:inline-flex;align-items:center;gap:10px;margin-top:19px;padding:0;border:0;background:transparent;color:#a65f7d;font-size:12px;font-weight:900;cursor:pointer}
+    .text-button span{display:grid;place-items:center;width:26px;height:26px;border-radius:50%;background:#f3dbe0;transition:transform .2s ease}.text-button:hover span{transform:translate(3px,-2px)}
+    .bottom-note{position:absolute;z-index:3;bottom:23px;left:clamp(12px,2.5vw,30px);display:flex;align-items:center;gap:9px;color:#594d65bf;font-size:11px;text-shadow:0 1px #ffffff55;pointer-events:none}
+    .note-icon{display:grid;place-items:center;width:30px;height:30px;border:1px solid #6c4c6317;border-radius:50%;background:#fffaf5b3;color:#b66f8d;font-size:16px}
+    .bottom-controls{position:absolute;z-index:4;right:clamp(12px,2.5vw,30px);bottom:19px;display:flex;align-items:center;gap:7px}
+    .round-button,.pill-button{border:1px solid #533e541f;background:rgba(255,250,245,.88);box-shadow:0 5px 19px #533a4e10;cursor:pointer;transition:transform .18s ease,background .18s ease}
+    .round-button{display:grid;place-items:center;width:41px;height:41px;border-radius:50%;font-size:19px}.pill-button{padding:11px 15px;border-radius:999px;font-size:11px;font-weight:900}
+    .round-button:hover,.pill-button:hover{transform:translateY(-2px);background:#fffaf5}
+    .trip-status{position:absolute;z-index:3;right:clamp(12px,2.5vw,30px);top:50%;transform:translateY(-35%);width:min(190px,22vw);padding:13px 15px;border:1px solid #654e5d14;border-radius:18px;background:rgba(255,250,245,.62);backdrop-filter:blur(12px);color:#6b5869;pointer-events:none}
+    .trip-status strong{display:block;font-size:11px;font-weight:900}.trip-status small{display:block;margin-top:4px;font-size:10px;line-height:1.65;color:#867586}.trip-dots{display:flex;gap:5px;margin-top:10px}.trip-dots i{display:block;width:5px;height:5px;border-radius:50%;background:#cb8ca1;animation:bob 1.2s ease-in-out infinite}.trip-dots i:nth-child(2){animation-delay:.16s}.trip-dots i:nth-child(3){animation-delay:.32s}@keyframes bob{0%,70%,100%{transform:translateY(0);opacity:.5}35%{transform:translateY(-4px);opacity:1}}
+    .toast{position:absolute;z-index:10;left:50%;bottom:76px;transform:translate(-50%,12px);max-width:calc(100% - 25px);padding:10px 15px;border:1px solid #654e5d1f;border-radius:13px;opacity:0;pointer-events:none;background:rgba(255,250,245,.96);color:#665268;box-shadow:0 15px 40px #4f364c1d;font-size:12px;transition:opacity .2s ease,transform .2s ease}.toast.show{opacity:1;transform:translate(-50%,0)}
+    .load-error{position:absolute;z-index:20;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px;text-align:center;background:linear-gradient(155deg,#eeb3ad,#f3c5b5 55%,#fff0d8);color:#554857}.load-error[hidden]{display:none!important}.load-error h2{margin:14px 0 5px;font:600 28px/1.15 'Playfair Display',Georgia,serif}.load-error p{max-width:480px;font-size:13px;line-height:1.7}.load-error code{display:block;max-width:100%;overflow-wrap:anywhere;color:#8c5d74;font-size:11px}
+    .pet-picker{position:absolute;z-index:9;inset:0;display:grid;place-items:center;padding:22px}
+    .pet-picker[hidden]{display:none!important}
+    .pet-scrim{position:absolute;inset:0;display:grid;place-items:center;padding:22px;background:rgba(76,57,76,.18);backdrop-filter:blur(5px)}
+    .pet-card{position:relative;width:min(620px,100%);max-height:min(760px,calc(100dvh - 34px));overflow:auto;padding:24px;border:1px solid #c99eb33d;border-radius:28px;background:rgba(255,250,246,.97);box-shadow:0 28px 90px #43314330;color:var(--ink)}
+    .pet-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+    .pet-card h2{margin:7px 0 6px;font:600 clamp(25px,4vw,34px)/1.1 'Playfair Display',Georgia,serif;letter-spacing:-.035em}
+    .pet-card-intro{margin:0;color:#806f7d;font-size:12px;line-height:1.7}
+    .pet-close{flex:0 0 auto;display:grid;place-items:center;width:35px;height:35px;border:1px solid #b78ba21f;border-radius:50%;background:#f6e8e9;cursor:pointer;font-size:21px}
+    .pet-layout{display:grid;grid-template-columns:168px minmax(0,1fr);gap:15px;margin-top:20px}
+    .pet-options{display:grid;align-content:start;gap:8px}
+    .pet-option{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:1px solid #d6bdc81a;border-radius:15px;background:#fff7f2;text-align:left;cursor:pointer;transition:transform .16s ease,border-color .16s ease,background .16s ease}
+    .pet-option:hover{transform:translateY(-1px);border-color:#d8a1b5}
+    .pet-option[aria-pressed="true"]{border-color:#c47f9c;background:#f8e6eb;box-shadow:inset 0 0 0 1px #c47f9c38}
+    .pet-option-icon{display:grid;place-items:center;flex:0 0 35px;height:35px;border-radius:12px;background:#f4dfdf;font-size:21px}
+    .pet-option strong{display:block;font-size:12px}.pet-option small{display:block;margin-top:2px;color:#9a8291;font-size:9px}
+    .pet-details{min-width:0;padding:17px;border:1px solid #d6bdc82b;border-radius:21px;background:linear-gradient(145deg,#fff8f2,#f7e9ed)}
+    .pet-profile-top{display:flex;align-items:center;gap:13px;margin-bottom:13px}
+    .pet-profile-icon{display:grid;place-items:center;flex:0 0 58px;height:58px;border-radius:19px;background:#fffaf5;box-shadow:0 6px 17px #80566b12;font-size:34px}
+    .pet-details h3{margin:0;font:600 24px/1.1 'Playfair Display',Georgia,serif}
+    .pet-details .pet-subtitle{margin:4px 0 0;color:#987d90;font-size:10px}
+    .pet-facts{display:grid;gap:9px;margin:13px 0 0}
+    .pet-fact{padding-bottom:8px;border-bottom:1px solid #c7a9b522}
+    .pet-fact:last-child{border-bottom:0;padding-bottom:0}
+    .pet-fact dt{margin-bottom:3px;color:#b07691;font:9px 'DM Mono',monospace;letter-spacing:.09em;text-transform:uppercase}
+    .pet-fact dd{margin:0;color:#6f5d6c;font-size:11px;line-height:1.55}
+    .pet-confirm{width:100%;margin-top:16px;padding:12px 16px;border:0;border-radius:999px;background:#c985a0;color:#fffaf7;font-size:12px;font-weight:900;cursor:pointer;box-shadow:0 6px 14px #a76d871b;transition:transform .16s ease,background .16s ease}
+    .pet-confirm:hover{transform:translateY(-1px);background:#b97894}
+    .pet-card-foot{margin:12px 0 0;color:#a18c9b;text-align:center;font-size:9px;line-height:1.5}
+    .delivery-modal{position:absolute;z-index:12;inset:0;display:grid;place-items:center;padding:20px}
+    .delivery-modal[hidden]{display:none!important}
+    .delivery-scrim{position:absolute;inset:0;display:grid;place-items:center;padding:18px;background:rgba(66,48,67,.24);backdrop-filter:blur(7px)}
+    .delivery-card{position:relative;width:min(600px,100%);max-height:calc(100dvh - 30px);overflow:auto;padding:24px;border:1px solid #d7a8ba66;border-radius:28px;background:rgba(255,250,246,.98);box-shadow:0 28px 95px #4331433b;color:var(--ink)}
+    .delivery-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+    .delivery-head h2{margin:7px 0 7px;font:600 clamp(27px,4vw,36px)/1.08 'Playfair Display',Georgia,serif;letter-spacing:-.035em}
+    .delivery-head p{margin:0;color:#806f7d;font-size:12px;line-height:1.65}
+    .delivery-hero{display:flex;align-items:center;gap:13px;margin:17px 0;padding:13px 15px;border:1px solid #d7b8c828;border-radius:18px;background:linear-gradient(120deg,#fff0e8,#f9e3ed 62%,#edf3e8)}
+    .delivery-pet-icon{display:grid;place-items:center;flex:0 0 52px;height:52px;border-radius:16px;background:#fffaf4;box-shadow:0 5px 15px #80566b12;font-size:31px}
+    .delivery-hero strong{display:block;font-size:13px}.delivery-hero small{display:block;margin-top:4px;color:#8c7787;font-size:10px;line-height:1.5}
+    .certificate{position:relative;overflow:hidden;padding:23px 20px 19px;border:1px solid #d4a6b3;border-radius:20px;background:linear-gradient(145deg,#fffaf0,#fff3ef 54%,#f6e7f1);text-align:center;box-shadow:inset 0 0 0 5px #fff8f1,inset 0 0 0 6px #e7c6ce}
+    .certificate::before,.certificate::after{position:absolute;color:#d9a2b6;opacity:.42;font-size:26px;pointer-events:none}.certificate::before{content:'✿';top:12px;left:15px}.certificate::after{content:'✧';right:17px;bottom:12px;font-size:31px}
+    .cert-kicker{color:#ad7792;font:9px 'DM Mono',monospace;letter-spacing:.17em;text-transform:uppercase}
+    .certificate h3{margin:9px 0 6px;font:600 clamp(23px,4vw,31px)/1.1 'Playfair Display',Georgia,serif;color:#8e5d7b}
+    .cert-intro{margin:0 auto;color:#806f7d;font-size:11px;line-height:1.6;max-width:390px}
+    .cert-paw{margin:12px auto 4px;font-size:31px;filter:drop-shadow(0 4px 5px #cb91a033)}
+    .cert-pet-name{margin:0;color:#654c62;font:600 clamp(23px,4vw,29px)/1.2 'Playfair Display',Georgia,serif;overflow-wrap:anywhere}
+    .cert-subline{margin:6px 0 13px;color:#927f8f;font-size:10px}
+    .cert-rule{width:74%;height:1px;margin:0 auto 12px;background:linear-gradient(90deg,transparent,#d8a3b5,transparent)}
+    .cert-meta{display:flex;justify-content:center;flex-wrap:wrap;gap:8px 20px;color:#8c7687;font:9px 'DM Mono',monospace}
+    .cert-meta strong{color:#96647f;font-weight:500}
+    .cert-disclaimer{margin:11px 0 0;color:#ad9aa6;font-size:8px;line-height:1.5}
+    .delivery-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:15px}
+    .delivery-field{display:grid;gap:5px;color:#99768b;font:9px 'DM Mono',monospace;letter-spacing:.04em;text-transform:uppercase}
+    .delivery-field input{width:100%;min-width:0;padding:11px 12px;border:1px solid #dfc5d1;border-radius:12px;outline:0;background:#fffdfa;color:#5d4d60;font:12px 'Nunito',sans-serif;letter-spacing:0;text-transform:none}
+    .delivery-field input:focus{border-color:#c985a0;box-shadow:0 0 0 3px #e5b8c633}
+    .delivery-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}
+    .delivery-action{flex:1 1 170px;padding:12px 15px;border:0;border-radius:999px;background:#c985a0;color:#fffaf7;font-size:11px;font-weight:900;cursor:pointer;box-shadow:0 6px 14px #a76d871b;transition:transform .16s ease,background .16s ease}
+    .delivery-action:hover{transform:translateY(-1px);background:#b97894}
+    .delivery-action.secondary{border:1px solid #d8bdc9;background:#fff7f3;color:#8c667e;box-shadow:none}
+    .delivery-action.secondary:hover{background:#f9e8ed}
+    @media(max-width:560px){.delivery-modal,.delivery-scrim{padding:9px}.delivery-card{padding:16px;border-radius:22px;max-height:calc(100dvh - 18px)}.delivery-head h2{font-size:27px}.delivery-hero{margin:12px 0;padding:10px}.certificate{padding:21px 12px 16px}.certificate h3{font-size:24px}.delivery-fields{grid-template-columns:1fr}.cert-meta{gap:6px 11px}.delivery-actions{gap:7px}}
+    @media(max-width:760px){.pet-picker,.pet-scrim{padding:12px}.pet-card{padding:19px;border-radius:23px;max-height:calc(100dvh - 24px)}.pet-layout{grid-template-columns:1fr;gap:12px;margin-top:14px}.pet-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.pet-option{padding:8px;gap:7px}.pet-option-icon{flex-basis:31px;height:31px;font-size:18px}.pet-option strong{font-size:11px}.pet-option small{font-size:8px}.pet-details{padding:13px}.pet-profile-icon{flex-basis:48px;height:48px;font-size:28px}.pet-details h3{font-size:22px}.pet-facts{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 12px}.pet-fact:nth-last-child(2){border-bottom:0}.pet-fact dd{font-size:10px}}
+    @media(max-width:420px){.pet-card{padding:16px}.pet-card h2{font-size:25px}.pet-card-intro{font-size:11px}.pet-option{flex-direction:column;align-items:flex-start}.pet-option small{display:none}.pet-facts{grid-template-columns:1fr}.pet-fact:nth-last-child(2){border-bottom:1px solid #c7a9b522}}
+    @media(max-width:760px){.intro-card{top:auto;bottom:80px;left:13px;transform:none;width:min(300px,calc(100% - 26px));padding:18px 19px 17px}.intro-card.dismissed{transform:translateY(12px)}.intro-card h1{font-size:28px}.intro-card p{font-size:11px;line-height:1.7}.tag-row{margin-top:11px}.trip-status{top:80px;right:12px;transform:none;width:130px;padding:10px 11px}.trip-status small{font-size:9px}.bottom-note{bottom:14px;font-size:9px}.note-icon{width:25px;height:25px}.bottom-controls{bottom:11px;gap:5px}.round-button{width:35px;height:35px}.pill-button{padding:9px 11px;font-size:10px}.topbar{top:11px}.brand{gap:7px;padding-right:10px}.brand-mark{width:32px;height:32px}.brand-copy strong{font-size:10px}.brand-copy em{font-size:14px}.time-tools{gap:5px}.time-chip{gap:6px;padding:6px 9px}.time-sun{width:28px;height:28px}.time-chip strong{font-size:9px}.time-chip small{font-size:9px}.time-picker-toggle{padding:10px 9px;font-size:9px}.time-picker-toggle span{font-size:12px}.time-options{min-width:164px}}
+    @media(max-width:420px){.trip-status{top:auto;bottom:63px;right:11px;width:117px}.intro-card{bottom:62px;width:calc(100% - 24px);max-width:278px}.intro-card .tag-row span{font-size:9px}.bottom-note{max-width:56%;line-height:1.4}.bottom-controls .pill-button{max-width:145px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+ </style>
+ <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script>
+</head>
+<body>
+<main id="site-shell">
+ <div class="sky-stars" id="sky-stars" aria-hidden="true"></div>
+ <div id="scene-wrap" aria-label="Van 3D pastel transportando pets por uma estrada em movimento"></div>
+ <header class="topbar">
+ <a class="brand" href="#site-shell" aria-label="Van das Patinhas, início">
+ <span class="brand-mark">🐾</span><span class="brand-copy"><strong>viagem de</strong><em>patinhas</em></span>
+ </a>
+ <div class="time-tools">
+ <div class="time-chip" title="Por padrão, o cenário acompanha o horário local do dispositivo. As opções abaixo servem para pré-visualizar outros horários.">
+ <span class="time-sun" id="time-icon">☼</span><span><strong id="time-label">céu de agora</strong><small id="clock-label">--:--</small></span>
+ </div>
+ <div class="time-picker">
+ <button class="time-picker-toggle" id="time-picker-toggle" type="button" aria-expanded="false" aria-controls="time-options">Ver horários <span>⌄</span></button>
+ <div class="time-options" id="time-options" hidden>
+ <p class="time-options-note">O cenário muda naturalmente ao longo do dia. Escolha outro horário apenas para pré-visualizar; volte ao automático quando terminar.</p>
+ <button class="time-option" type="button" data-hour="9" aria-pressed="false"><span>🌤️</span><span>Manhã<small>09:00 · luz suave</small></span></button>
+ <button class="time-option" type="button" data-hour="15.5" aria-pressed="false"><span>☀️</span><span>Tarde<small>15:30 · luz dourada</small></span></button>
+ <button class="time-option" type="button" data-hour="17.5" aria-pressed="false"><span>🌇</span><span>Pôr do sol<small>17:30 · céu rosado</small></span></button>
+ <button class="time-option" type="button" data-hour="21" aria-pressed="false"><span>🌙</span><span>Noite<small>21:00 · céu estrelado</small></span></button>
+ <button class="time-option" type="button" data-hour="now" aria-pressed="true"><span>🕒</span><span>Automático · horário atual<small>acompanha a hora local</small></span></button>
+ </div>
+ </div>
+ </div>
+ </header>
+ <section class="intro-card" id="intro-card">
+ <div class="eyebrow">✧ bip-bip! transporte patinhas santmisu ✧</div>
+ <h1>Van das<br><span>Patinhas</span>.｡ *ﾟ🐈+.</h1>
+ <p>Oh! Soube que é você que procura por uma nova companhia. Que tal um de nossos anjinhos de quatro patas? Aguarde alguns minutinhos até a chegada de seu mais novo amigo. 🤍</p>
+ <div class="tag-row"><span>😴 viagem tranquila</span><span>✿</span><span>✉️ certificado automático</span><span>📫 entregas realizadas com carinho!</span></div>
+ <button class="text-button" id="hide-intro">iniciar passeio <span>↗</span></button>
+ </section>
+ <aside class="trip-status" aria-live="polite">
+ <strong id="trip-title">Uma entrega especial</strong>
+ <small id="trip-copy">Clique na van para escolher o pet da viagem.</small>
+ <div class="trip-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+ </aside>
+ <div class="bottom-note"><span class="note-icon">✿</span><span>arraste para girar em 360° · clique na van para escolher o pet ♡</span></div>
+ <div class="bottom-controls">
+ <button class="round-button" id="horn-button" title="Buzininha suave" aria-label="Buzininha suave">♡</button>
+ <button class="pill-button" id="pause-button">Ⅱ pausar viagem</button>
+ </div>
+ <section class="pet-picker" id="pet-picker" hidden aria-labelledby="pet-dialog-title">
+ <div class="pet-scrim" id="pet-scrim">
+ <div class="pet-card" role="dialog" aria-modal="true" aria-labelledby="pet-dialog-title" aria-describedby="pet-dialog-copy">
+ <div class="pet-card-head">
+ <div><div class="eyebrow">✧ passageiros de patinhas ✧</div><h2 id="pet-dialog-title">Quem vamos entregar?</h2><p class="pet-card-intro" id="pet-dialog-copy">Escolha um amiguinho para a próxima entrega. A ficha muda conforme a espécie.</p></div>
+ <button class="pet-close" id="pet-close" type="button" aria-label="Fechar seleção de pet">×</button>
+ </div>
+ <div class="pet-layout">
+ <div class="pet-options" id="pet-options" aria-label="Escolher espécie">
+ <button class="pet-option" type="button" data-pet="cat" aria-pressed="true"><span class="pet-option-icon">🐱</span><span><strong>Gato</strong><small>curioso e delicado</small></span></button>
+ <button class="pet-option" type="button" data-pet="dog" aria-pressed="false"><span class="pet-option-icon">🐶</span><span><strong>Cachorro</strong><small>companheiro fiel</small></span></button>
+ <button class="pet-option" type="button" data-pet="guinea" aria-pressed="false"><span class="pet-option-icon">🐹</span><span><strong>Porquinho-da-índia</strong><small>pequeno e sensível</small></span></button>
+ <button class="pet-option" type="button" data-pet="rabbit" aria-pressed="false"><span class="pet-option-icon">🐰</span><span><strong>Coelho</strong><small>gentil e atento</small></span></button>
+ </div>
+ <article class="pet-details" aria-live="polite">
+ <div class="pet-profile-top"><div class="pet-profile-icon" id="pet-profile-icon">🐱</div><div><h3 id="pet-name">Gato</h3><p class="pet-subtitle" id="pet-subtitle">um passageiro muito especial ♡</p></div></div>
+ <dl class="pet-facts">
+ <div class="pet-fact"><dt>Porte</dt><dd id="pet-size">Pequeno a médio</dd></div>
+ <div class="pet-fact"><dt>Jeitinho</dt><dd id="pet-temperament">Curioso, observador e sensível a mudanças.</dd></div>
+ <div class="pet-fact"><dt>Transporte</dt><dd id="pet-transport">Caixa de transporte segura, firme e bem ventilada.</dd></div>
+ <div class="pet-fact"><dt>Cuidado especial</dt><dd id="pet-care">Ambiente calmo, manta familiar e caixa sempre fechada durante o trajeto.</dd></div>
+ </dl>
+ <button class="pet-confirm" id="confirm-pet" type="button">Escolher este pet ♡</button>
+ <p class="pet-card-foot">Ficha informativa geral; cada bichinho tem suas próprias necessidades.</p>
+ </article>
+ </div>
+ </div>
+ </div>
+ </section>
+ <section class="delivery-modal" id="delivery-modal" hidden aria-labelledby="delivery-title">
+ <div class="delivery-scrim" id="delivery-scrim">
+ <div class="delivery-card" role="dialog" aria-modal="true" aria-labelledby="delivery-title">
+ <div class="delivery-head">
+ <div><div class="eyebrow">✧ uma nova jornada começa ✧</div><h2 id="delivery-title">Certificado pronto! ♡</h2><p id="delivery-copy">O certificado afetivo está preparado. Quando estiver tudo pronto, siga viagem até a casinha para concluir a entrega.</p></div>
+ <button class="pet-close" id="delivery-close" type="button" aria-label="Fechar certificado">×</button>
+ </div>
+ <div class="delivery-hero"><div class="delivery-pet-icon" id="delivery-pet-icon">🐱</div><div><strong id="delivery-hero-title">Entrega preparada com carinho</strong><small id="delivery-hero-copy">A van está levando amor pela estrada.</small></div></div>
+ <article class="certificate" id="certificate-preview" aria-label="Certificado comemorativo de adoção">
+ <div class="cert-kicker">Van das Patinhas · lembrança especial</div>
+ <h3>Certificado de Adoção</h3>
+ <p class="cert-intro">Com carinho, celebramos o começo de uma nova história para</p>
+ <div class="cert-paw" id="certificate-pet-icon">🐱</div>
+ <p class="cert-pet-name" id="certificate-pet-name">Novo amiguinho</p>
+ <p class="cert-subline" id="certificate-family-line">e sua família cheia de amor</p>
+ <div class="cert-rule"></div>
+ <div class="cert-meta"><span>EMITIDO EM <strong id="certificate-date">—</strong></span><span>Nº <strong id="certificate-number">VP-000000</strong></span></div>
+ <p class="cert-disclaimer">Certificado afetivo comemorativo. Não substitui documentos oficiais de adoção ou transporte.</p>
+ </article>
+ <div class="delivery-fields">
+ <label class="delivery-field">Nome do pet<input id="certificate-pet-input" type="text" maxlength="38" placeholder="Ex.: Mel"></label>
+ <label class="delivery-field">Nome da família<input id="certificate-family-input" type="text" maxlength="48" placeholder="Ex.: Família Oliveira"></label>
+ </div>
+ <div class="delivery-actions">
+ <button class="delivery-action" id="download-certificate" type="button">Baixar certificado PNG ↓</button>
+ <button class="delivery-action secondary" id="continue-trip" type="button">Seguir até a casinha 🏡</button>
+ </div>
+ </div>
+ </div>
+ </section>
+ <div class="toast" id="toast" role="status" aria-live="polite"></div>
+ <section class="load-error" id="load-error" role="alert" hidden>
+ <div style="font-size:34px">🐾</div><h2>A van está ajeitando as patinhas...</h2>
+ <p>A cena 3D não conseguiu carregar. Confira a conexão com a internet, o acesso ao Three.js por CDN e se o navegador permite WebGL.</p><code id="load-error-detail"></code>
+ </section>
+</main>
+<script type="module">
+async function startTrip(){
+  try {
+    const THREE = await import('three');
+    const shell=document.querySelector('#site-shell');
+    const wrap=document.querySelector('#scene-wrap');
+    const stars=document.querySelector('#sky-stars');
+    const errorPanel=document.querySelector('#load-error');
+    const errorDetail=document.querySelector('#load-error-detail');
+    const toast=document.querySelector('#toast');
+    const scene=new THREE.Scene();
+    scene.fog=new THREE.Fog('#f4cdbb',25,85);
+    const camera=new THREE.PerspectiveCamera(window.innerWidth<600?50:43,1,.1,180);
+    const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'high-performance'});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.75));
+    renderer.outputColorSpace=THREE.SRGBColorSpace;
+    renderer.toneMapping=THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure=1.12;
+    renderer.shadowMap.enabled=true;
+    renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+    renderer.setClearColor(0x000000,0);
+    renderer.domElement.setAttribute('aria-label','Cena 3D da van de pets em uma estrada pastel');
+    wrap.appendChild(renderer.domElement);
+
+    const hemisphere=new THREE.HemisphereLight('#fff3e2','#92a78d',1.65);scene.add(hemisphere);
+    const sunlight=new THREE.DirectionalLight('#ffe3c5',2.2);sunlight.position.set(-5,9,7);sunlight.castShadow=true;sunlight.shadow.mapSize.set(1024,1024);sunlight.shadow.camera.left=-13;sunlight.shadow.camera.right=13;sunlight.shadow.camera.top=13;sunlight.shadow.camera.bottom=-13;scene.add(sunlight);
+    const fillLight=new THREE.DirectionalLight('#f4d5e3',.62);fillLight.position.set(7,4,-6);scene.add(fillLight);
+
+    const mats={
+      mint:mat('#9ecfbd'),mintLight:mat('#b9dfcd'),mintDark:mat('#74af9b'),cream:mat('#fff4dc'),creamShade:mat('#e9dcc0'),
+      window: new THREE.MeshPhysicalMaterial({color:'#e8b3ca',roughness:.16,metalness:.13,transparent:true,opacity:.82,depthWrite:false,clearcoat:1,clearcoatRoughness:.12,side:THREE.DoubleSide}),
+      glassReflection: new THREE.MeshBasicMaterial({color:'#fff5f5',transparent:true,opacity:.62,depthWrite:false}),
+      glassReflectionRose: new THREE.MeshBasicMaterial({color:'#f6d0df',transparent:true,opacity:.44,depthWrite:false}),
+      glassDark:mat('#6b8290'),tire:mat('#463e49'),tireSide:mat('#756a75'),hub:mat('#f4d69a'),rose:mat('#e9a4bb'),roseLight:mat('#f5c6d2'),
+      peach:mat('#eeb49e'),lilac:mat('#b8a7d2'),leaf:mat('#7da98c'),leafLight:mat('#b3cda0'),grass:mat('#aec8a1'),grass2:mat('#d2d9ab'),road:mat('#bda9bb'),roadLight:mat('#d6c2cf'),roadMark:mat('#fff1d6'),dark:mat('#4e4755'),white:mat('#fffaf0'),nose:mat('#c77f91'),houseWall:mat('#fff0dc'),houseTrim:mat('#fffaf0'),houseRoof:mat('#c985a0'),houseRoofLight:mat('#df9fb2'),houseDoor:mat('#9ecfbd'),houseStone:mat('#d8c6bf'),houseWood:mat('#b88e78'),houseGold:mat('#f5cf93')
+    };
+    function mat(color,roughness=.9){return new THREE.MeshStandardMaterial({color,roughness});}
+    function addMesh(geom,material,parent,pos=[0,0,0],scale=null){const o=new THREE.Mesh(geom,material);o.position.set(...pos);if(scale)o.scale.set(...scale);o.castShadow=true;o.receiveShadow=true;parent.add(o);return o;}
+    function roundedShape(points,depth,bevel=.06){
+      const s=new THREE.Shape();s.moveTo(...points[0]);for(let i=1;i<points.length;i++)s.lineTo(...points[i]);s.closePath();
+      return new THREE.ExtrudeGeometry(s,{depth,bevelEnabled:bevel>0,bevelSegments:3,steps:1,bevelSize:bevel,bevelThickness:bevel,curveSegments:8});
+    }
+    function box(parent, size, material, pos, rotation=[0,0,0], bevel=false){
+      let geom;
+      if(bevel){const [w,h,d]=size;geom=roundedShape([[-w/2,-h/2],[w/2,-h/2],[w/2,h/2],[-w/2,h/2]],d,Math.min(.06,w*.12,h*.12));}
+      else geom=new THREE.BoxGeometry(...size);
+      const o=addMesh(geom,material,parent,pos);o.rotation.set(...rotation);return o;
+    }
+    function makeCatEar(parent,x,y,z,tilt=0){
+      const ear=new THREE.Group();ear.position.set(x,y,z);ear.rotation.z=tilt;parent.add(ear);
+      const outer=new THREE.Shape();
+      outer.moveTo(-.235,0);
+      outer.quadraticCurveTo(-.29,.045,-.245,.145);
+      outer.lineTo(-.095,.435);
+      outer.quadraticCurveTo(-.025,.555,.045,.49);
+      outer.lineTo(.235,.185);
+      outer.quadraticCurveTo(.295,.075,.235,.012);
+      outer.quadraticCurveTo(.02,-.045,-.235,0);
+      const outerGeo=new THREE.ExtrudeGeometry(outer,{depth:.13,bevelEnabled:true,bevelSegments:4,steps:1,bevelSize:.026,bevelThickness:.025,curveSegments:14});
+      addMesh(outerGeo,mats.cream,ear,[0,0,0]);
+      const inner=new THREE.Shape();
+      inner.moveTo(-.145,.08);
+      inner.quadraticCurveTo(-.17,.10,-.125,.20);
+      inner.lineTo(-.055,.365);
+      inner.quadraticCurveTo(-.005,.427,.038,.375);
+      inner.lineTo(.135,.205);
+      inner.quadraticCurveTo(.16,.13,.12,.105);
+      inner.quadraticCurveTo(-.01,.045,-.145,.08);
+      const innerGeo=new THREE.ExtrudeGeometry(inner,{depth:.012,bevelEnabled:true,bevelSegments:2,steps:1,bevelSize:.009,bevelThickness:.006,curveSegments:12});
+      addMesh(innerGeo,mats.roseLight,ear,[0,.012,.142]);
+      // Pequeno detalhe claro na parte interna da orelha.
+      addMesh(new THREE.SphereGeometry(.026,12,9),mats.cream,ear,[-.035,.18,.158],[1,.55,.22]);
+    }
+
+    // Cenário em tons pastel.
+    const world=new THREE.Group();scene.add(world);
+    const ground=addMesh(new THREE.PlaneGeometry(260,260),mats.grass,world,[0,-.02,-24]);ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;
+    const farHills=new THREE.Group();scene.add(farHills);
+    for(let i=0;i<11;i++){
+      const x=-44+i*8.8;const h=3.1+(i%4)*.6;const color=[mats.grass,mats.grass2,mats.leafLight][i%3];
+      addMesh(new THREE.SphereGeometry(1,20,14),color,farHills,[x,-1.7,-51-(i%3)*2],[5.6,h,1.5]);
+    }
+
+    // Trechos conectados da estrada são reutilizados para manter o movimento contínuo.
+    const SEG=13,ROAD_W=5.25;let driving=true;let speed=6.4;let deliveryRouteActive=false,deliveryHouse=null,deliveryPhase='idle';const roadSegments=[];
+    function trackCenter(i){return Math.max(-1.38,Math.min(1.38,Math.sin(i*.33)*1.08+Math.sin(i*.145)*.46));}
+    function makeRoadSegment(nearX,farX,z){
+      const g=new THREE.Group();g.position.z=z;g.userData.nearX=nearX;g.userData.farX=farX;
+      const v=[nearX-ROAD_W/2,.025,0,nearX+ROAD_W/2,.025,0,farX+ROAD_W/2,.025,-SEG,farX-ROAD_W/2,.025,-SEG];
+      const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.Float32BufferAttribute(v,3));geo.setIndex([0,1,2,0,2,3]);geo.computeVertexNormals();
+      addMesh(geo,mats.road,g,[0,0,0]);
+      for(const side of [-1,1]){
+        const offset=side*(ROAD_W/2+.08),outer=side*(ROAD_W/2+.27);
+        const strip=[nearX+offset,.047,0,nearX+outer,.047,0,farX+outer,.047,-SEG,farX+offset,.047,-SEG];
+        const sg=new THREE.BufferGeometry();sg.setAttribute('position',new THREE.Float32BufferAttribute(strip,3));sg.setIndex(side===-1?[0,2,1,0,3,2]:[0,1,2,0,2,3]);sg.computeVertexNormals();addMesh(sg,mats.roadLight,g,[0,0,0]);
+      }
+      for(const f of [.14,.43,.72,.93]){
+        const x=nearX+(farX-nearX)*f;const dash=addMesh(new THREE.BoxGeometry(.075,.026,1.05),mats.roadMark,g,[x,.06,-SEG*f]);dash.rotation.y=-Math.atan2(farX-nearX,SEG);
+      }
+      scene.add(g);return g;
+    }
+    const INITIAL_SEGMENTS=24;const centers=Array.from({length:INITIAL_SEGMENTS+1},(_,i)=>trackCenter(i));let nextPathIndex=INITIAL_SEGMENTS;
+    for(let i=0;i<INITIAL_SEGMENTS;i++)roadSegments.push(makeRoadSegment(centers[i],centers[i+1],-i*SEG));
+    function disposeRoadSegment(seg){seg.traverse(o=>{if(o.geometry)o.geometry.dispose();});scene.remove(seg);}
+    // Vegetação e flores ao longo da estrada.
+    const scenery=[];
+    const grassPivots=[];
+    function makeGrassGroup(){
+      const g=new THREE.Group();
+      const bladeMats=[mats.leaf,mats.leafLight,mats.grass2,mats.mintDark];
+      // Cada haste gira pela base para simular o movimento do vento.
+      for(let i=0;i<5+Math.floor(Math.random()*3);i++){
+        const h=.24+Math.random()*.34;
+        const pivot=new THREE.Group();
+        pivot.position.set((Math.random()-.5)*.58,.012,(Math.random()-.5)*.34);
+        pivot.userData.baseAngle=(Math.random()-.5)*.58;
+        pivot.userData.windPhase=Math.random()*Math.PI*2;
+        pivot.userData.windAmount=.075+Math.random()*.095;
+        g.add(pivot);
+        const blade=addMesh(new THREE.ConeGeometry(.035+Math.random()*.025,h,5),bladeMats[Math.floor(Math.random()*bladeMats.length)],pivot,[0,h*.48,0]);
+        blade.rotation.z=(Math.random()-.5)*.22;
+        blade.rotation.x=(Math.random()-.5)*.18;
+        grassPivots.push(pivot);
+      }
+      // Folhas menores completam a base da grama.
+      for(let i=0;i<2;i++){
+        const leaf=addMesh(new THREE.SphereGeometry(.13,8,6),bladeMats[i],g,[(Math.random()-.5)*.35,.075,(Math.random()-.5)*.22]);
+        leaf.rotation.z=(Math.random()-.5)*.6;leaf.scale.set(.85,.45,.28);
+      }
+      return g;
+    }
+    function makeTreeGroup(){
+      const g=new THREE.Group();const trunk=addMesh(new THREE.CylinderGeometry(.10,.15,.67,8),mats.peach,g,[0,.34,0]);
+      const top=addMesh(new THREE.SphereGeometry(.62,14,11),mats.leaf,g,[0,.93,0],[1,.9,.9]);
+      addMesh(new THREE.SphereGeometry(.44,12,10),mats.leafLight,g,[.30,1.03,.02]);
+      addMesh(new THREE.SphereGeometry(.35,12,10),mats.grass2,g,[-.3,.80,.02]);return g;
+    }
+    function makeFlowerGroup(){
+      const g=new THREE.Group();addMesh(new THREE.CylinderGeometry(.025,.035,.32,7),mats.leaf,g,[0,.16,0]);
+      const petal=[mats.roseLight,mats.lilac,mats.cream][Math.floor(Math.random()*3)];
+      for(let j=0;j<5;j++){const a=j*Math.PI*2/5;addMesh(new THREE.SphereGeometry(.105,9,7),petal,g,[Math.cos(a)*.12,.34,Math.sin(a)*.12]);}
+      addMesh(new THREE.SphereGeometry(.055,8,6),mats.hub,g,[0,.35,0]);return g;
+    }
+    function spawnScenery(x,z,kind){
+      const g=kind==='tree'?makeTreeGroup():kind==='grass'?makeGrassGroup():makeFlowerGroup();
+      g.position.set(x,0,z);
+      g.scale.setScalar(kind==='tree'?.75+Math.random()*.5:kind==='grass'?.78+Math.random()*.65:.55+Math.random()*.7);
+      scene.add(g);scenery.push(g);return g;
+    }
+    // Distribui grama, árvores e flores nas laterais da estrada.
+    for(let i=0;i<108;i++){
+      const z=-88+Math.random()*106;const side=Math.random()<.5?-1:1;
+      const roll=Math.random();const kind=roll<.22?'tree':roll<.35?'flower':'grass';
+      const x=side*((kind==='grass'?3.45:4.15)+Math.random()*(kind==='grass'?4.8:5.8));
+      spawnScenery(x,z,kind);
+    }
+
+    // Casa que marca o destino da entrega.
+    function makeDeliveryHouse(){
+      const house=new THREE.Group();house.userData.isDeliveryHouse=true;
+      // Corpo da casa e parte triangular da fachada.
+      box(house,[2.62,1.46,2.28],mats.houseWall,[0,.73,0],[0,0,0],false);
+      const gable=new THREE.Shape();gable.moveTo(-1.34,1.36);gable.lineTo(0,2.42);gable.lineTo(1.34,1.36);gable.closePath();
+      const gableGeo=new THREE.ExtrudeGeometry(gable,{depth:.09,bevelEnabled:true,bevelSegments:2,steps:1,bevelSize:.025,bevelThickness:.018});
+      addMesh(gableGeo,mats.houseWall,house,[0,0,-1.19]);
+      // Duas partes do telhado e acabamento claro.
+      box(house,[1.78,.17,2.56],mats.houseRoof,[-.71,1.93,0],[0,0,.66],false);
+      box(house,[1.78,.17,2.56],mats.houseRoofLight,[.71,1.93,0],[0,0,-.66],false);
+      box(house,[.15,.16,2.61],mats.houseTrim,[0,2.49,0],[0,0,0],false);
+      // Chaminé e acabamento superior.
+      box(house,[.31,.66,.34],mats.peach,[.80,2.32,.42],[0,0,0],false);
+      box(house,[.42,.10,.42],mats.houseTrim,[.80,2.66,.42],[0,0,0],false);
+      // Porta, janelas e molduras.
+      box(house,[.59,.91,.09],mats.houseTrim,[.18,.47,-1.205],[0,0,0],true);
+      box(house,[.45,.77,.045],mats.houseDoor,[.18,.45,-1.267],[0,0,0],true);
+      addMesh(new THREE.SphereGeometry(.045,12,10),mats.houseGold,house,[.33,.45,-1.302]);
+      for(const x of [-.82,.98]){
+        box(house,[.57,.57,.09],mats.houseTrim,[x,.98,-1.205],[0,0,0],true);
+        box(house,[.45,.44,.035],mats.window,[x,.98,-1.264],[0,0,0],true);
+        box(house,[.035,.44,.025],mats.houseTrim,[x,.98,-1.287]);
+        box(house,[.45,.035,.025],mats.houseTrim,[x,.98,-1.288]);
+        box(house,[.62,.055,.14],mats.houseTrim,[x,.68,-1.23],[0,0,0],true);
+      }
+      // Varanda e início do caminho de pedras.
+      box(house,[1.10,.11,.42],mats.houseTrim,[.18,.10,-1.43],[0,0,0],true);
+      for(const x of [-.26,.62])box(house,[.075,.47,.075],mats.houseTrim,[x,.29,-1.43],[0,0,0],true);
+      box(house,[1.18,.07,.10],mats.houseWood,[.18,.51,-1.44],[0,0,0],true);
+      // O caminho de pedras termina antes da beira da estrada,
+      // deixando uma faixa de grama entre a casa e a pista.
+      // Após girar a casa, o eixo Z negativo aponta para a estrada.
+      // As pedras ficam espaçadas e ligeiramente alternadas.
+      const pathStones=[
+        [.18,.035,-1.84], [.04,.035,-2.22], [.29,.035,-2.60],
+        [.12,.035,-2.98], [.30,.035,-3.36]
+      ];
+      for(const [x,y,z] of pathStones){
+        const stone=addMesh(new THREE.SphereGeometry(.22,12,8),mats.houseStone,house,[x,y,z]);
+        stone.scale.set(.92,.18,1.16);
+        stone.rotation.y=(Math.random()-.5)*.24;
+      }
+      // A fachada e o caminho ficam voltados para a estrada.
+      // A frente da casa aponta para o eixo X positivo.
+      house.rotation.y=-Math.PI/2;
+      // Arbustos e flores ao redor da entrada.
+      for(const [x,z,scale,material] of [[-1.42,-.82,.43,mats.leaf],[1.43,-.82,.42,mats.leafLight],[-1.52,-1.1,.28,mats.grass2],[1.50,-1.08,.27,mats.leaf]]){
+        addMesh(new THREE.SphereGeometry(scale,12,9),material,house,[x,scale*.72,z],[1,.82,.9]);
+      }
+      for(const [x,z,color] of [[-1.55,-1.33,mats.roseLight],[1.56,-1.30,mats.houseGold],[1.28,-1.52,mats.rose]]){
+        addMesh(new THREE.SphereGeometry(.09,10,8),color,house,[x,.15,z]);
+        addMesh(new THREE.SphereGeometry(.035,8,6),mats.houseGold,house,[x,.17,z-.01]);
+      }
+      return house;
+    }
+
+    // Nuvens ao fundo.
+    const clouds=[];
+    function makeCloud(x,y,z,s){const g=new THREE.Group();const cloudMat=new THREE.MeshStandardMaterial({color:'#fff4e7',roughness:1,transparent:true,opacity:.84});
+      addMesh(new THREE.SphereGeometry(.68,14,10),cloudMat,g,[-.58,0,0],[1.2,.72,.72]);addMesh(new THREE.SphereGeometry(.9,14,10),cloudMat,g,[0,.18,0],[1.1,.78,.75]);addMesh(new THREE.SphereGeometry(.61,14,10),cloudMat,g,[.62,0,.02],[1.1,.67,.7]);g.position.set(x,y,z);g.scale.setScalar(s);scene.add(g);clouds.push(g);return g;}
+    makeCloud(-8,7,-28,1.35);makeCloud(8,8,-38,1.05);makeCloud(-3,9,-56,.95);makeCloud(13,6,-63,1.2);
+
+    // Modelo principal da van, com duas orelhas arredondadas.
+    const van=new THREE.Group();scene.add(van);van.position.set(0,0,0);
+    const bodyShape=new THREE.Shape();bodyShape.moveTo(-1.14,.34);bodyShape.lineTo(1.14,.34);bodyShape.lineTo(1.14,1.55);bodyShape.quadraticCurveTo(1.14,1.85,.83,1.91);bodyShape.lineTo(-.67,1.91);bodyShape.quadraticCurveTo(-1.08,1.9,-1.14,1.48);bodyShape.closePath();
+    const bodyGeom=new THREE.ExtrudeGeometry(bodyShape,{depth:3.05,bevelEnabled:true,bevelSegments:4,steps:1,bevelSize:.07,bevelThickness:.06,curveSegments:12});
+    addMesh(bodyGeom,mats.mint,van,[0,0,-1.525]);
+    // Capô, para-brisa, janelas e molduras claras.
+    box(van,[2.14,.35,.98],mats.mintLight,[0,.72,1.12],[0,0,0],true);
+    box(van,[1.72,.09,1.02],mats.cream,[0,1.97,.05],[0,0,0],true);
+    box(van,[1.54,.58,.045],mats.window,[0,1.56,1.69]);
+    box(van,[1.66,.07,.055],mats.cream,[0,1.88,1.72]);box(van,[1.66,.07,.055],mats.cream,[0,1.25,1.72]);
+    box(van,[.07,.64,.065],mats.cream,[-.81,1.56,1.72]);box(van,[.07,.64,.065],mats.cream,[.81,1.56,1.72]);
+    // Janelas laterais e suas molduras.
+    for(const z of [.69,-.22,-1.02]){
+      box(van,[.045,.56,.72],mats.window,[1.205,1.55,z]);
+      box(van,[.065,.06,.79],mats.cream,[1.213,1.86,z]);box(van,[.065,.06,.79],mats.cream,[1.213,1.24,z]);
+    }
+    for(const z of [.22,-.68])box(van,[.07,.65,.07],mats.cream,[1.22,1.55,z]);
+    // Contorno e puxador da porta lateral.
+    box(van,[.045,.83,.76],mats.mintDark,[1.206,.86,-.56]);
+    box(van,[.05,.72,.66],mats.mint,[1.236,.87,-.56]);
+    box(van,[.035,.045,.21],mats.cream,[1.27,1.05,-.33]);
+    // Para-choque dianteiro, faróis, grade e símbolo de patinha.
+    box(van,[2.24,.18,.16],mats.cream,[0,.48,1.58],[0,0,0],true);
+    box(van,[.48,.11,.055],mats.mintDark,[0,.77,1.61],[0,0,0],true);
+    for(const x of [-.87,.87]){
+      addMesh(new THREE.SphereGeometry(.18,16,12),mats.cream,van,[x,.98,1.61],[1,1,.45]);
+      addMesh(new THREE.SphereGeometry(.112,16,12),mats.hub,van,[x,.98,1.68],[1,1,.42]);
+      addMesh(new THREE.SphereGeometry(.045,12,8),mats.white,van,[x-.025,1.02,1.708],[1,1,.45]);
+    }
+    // Vidros rosados com reflexos; sem figuras nas janelas.
+    box(van,[.105,.39,.016],mats.glassReflection,[-.46,1.56,1.726],[0,0,.34]);
+    box(van,[.052,.25,.014],mats.glassReflectionRose,[.36,1.61,1.726],[0,0,.30]);
+    box(van,[.032,.17,.014],mats.glassReflection,[-.28,1.70,1.726],[0,0,.25]);
+    for(const z of [.69,-.22,-1.02]){
+      box(van,[.014,.39,.075],mats.glassReflection,[1.239,1.57,z-.15]);
+      box(van,[.014,.22,.035],mats.glassReflectionRose,[1.239,1.63,z+.12]);
+    }
+
+    // Portas traseiras, janela e identificação da van.
+    box(van,[2.00,1.20,.055],mats.mintDark,[0,1.08,-1.575],[0,0,0],true);
+    box(van,[1.90,1.12,.045],mats.mint,[0,1.08,-1.612],[0,0,0],true);
+    box(van,[1.42,.48,.055],mats.cream,[0,1.49,-1.646],[0,0,0],true);
+    box(van,[1.28,.35,.035],mats.window,[0,1.49,-1.682],[0,0,0],true);
+    // Reflexos na janela traseira.
+    box(van,[.13,.25,.012],mats.glassReflection,[-.31,1.50,-1.704],[0,0,-.34]);
+    box(van,[.07,.19,.012],mats.glassReflectionRose,[.18,1.53,-1.704],[0,0,-.30]);
+
+    // O letreiro é desenhado em canvas, sem precisar de imagem externa.
+    box(van,[1.82,.34,.065],mats.cream,[0,.87,-1.653],[0,0,0],true);
+    box(van,[1.72,.26,.025],mats.roseLight,[0,.87,-1.699],[0,0,0],true);
+    const signCanvas=document.createElement('canvas');signCanvas.width=1024;signCanvas.height=180;
+    const signCtx=signCanvas.getContext('2d');
+    const signGradient=signCtx.createLinearGradient(0,0,1024,180);
+    signGradient.addColorStop(0,'#fff8e8');signGradient.addColorStop(.52,'#fff0e8');signGradient.addColorStop(1,'#f9dce6');
+    signCtx.fillStyle=signGradient;signCtx.fillRect(0,0,1024,180);
+    signCtx.strokeStyle='#d49aaf';signCtx.lineWidth=7;signCtx.strokeRect(8,8,1008,164);
+    signCtx.textAlign='center';signCtx.textBaseline='middle';
+    signCtx.fillStyle='#76556d';signCtx.font='700 65px Arial, sans-serif';signCtx.fillText('VAN DAS PATINHAS',512,72);
+    signCtx.fillStyle='#ad7891';signCtx.font='600 31px Arial, sans-serif';signCtx.fillText('TRANSPORTE COM AMOR  •  PATINHAS FELIZES',512,129);
+    const signTexture=new THREE.CanvasTexture(signCanvas);signTexture.colorSpace=THREE.SRGBColorSpace;signTexture.anisotropy=renderer.capabilities.getMaxAnisotropy();
+    const signMaterial=new THREE.MeshBasicMaterial({map:signTexture,side:THREE.DoubleSide,toneMapped:false});
+    const signFace=addMesh(new THREE.PlaneGeometry(1.62,.235),signMaterial,van,[0,.87,-1.716]);signFace.rotation.y=Math.PI;
+    // Lanternas e para-choque traseiro.
+    for(const x of [-.83,.83]){
+      addMesh(new THREE.SphereGeometry(.12,14,10),mats.cream,van,[x,.60,-1.654],[1,1,.48]);
+      addMesh(new THREE.SphereGeometry(.082,14,10),mats.rose,van,[x,.60,-1.704],[1,1,.48]);
+      addMesh(new THREE.SphereGeometry(.026,10,8),mats.roseLight,van,[x,.625,-1.738],[1,.8,.35]);
+    }
+    box(van,[2.14,.14,.12],mats.cream,[0,.43,-1.635],[0,0,0],true);
+    box(van,[.42,.065,.04],mats.mintDark,[0,.43,-1.704],[0,0,0],true);
+
+    // Orelhas arredondadas com borda clara e interior rosa.
+    makeCatEar(van,-.43,1.98,.36,.16);makeCatEar(van,.43,1.98,.36,-.16);
+    // Rodas, cubos e molduras dos para-lamas.
+    const wheelPivots=[];
+    for(const side of [-1,1])for(const z of [-.98,.94]){
+      const pivot=new THREE.Group();pivot.position.set(side*1.15,.48,z);van.add(pivot);wheelPivots.push(pivot);
+      const tire=addMesh(new THREE.CylinderGeometry(.39,.39,.24,20),mats.tire,pivot,[0,0,0]);tire.rotation.z=Math.PI/2;
+      const hub=addMesh(new THREE.CylinderGeometry(.205,.205,.255,16),mats.hub,pivot,[side*.012,0,0]);hub.rotation.z=Math.PI/2;
+      addMesh(new THREE.SphereGeometry(.085,12,10),mats.rose,pivot,[side*.145,0,0],[.28,1,1]);
+      // Arco claro acima de cada roda.
+      const arc=new THREE.TorusGeometry(.43,.085,8,22,Math.PI);const fender=addMesh(arc,mats.cream,van,[side*1.16,.51,z]);fender.rotation.y=Math.PI/2;fender.rotation.z=Math.PI;
+    }
+    // Bagageiro e símbolo de patinha na lateral.
+    box(van,[1.3,.08,.1],mats.cream,[0,2.02,-.56],[0,0,0],true);
+    for(const x of [-.48,.48])box(van,[.08,.14,.08],mats.cream,[x,2.06,-.56]);
+    addMesh(new THREE.SphereGeometry(.085,10,8),mats.roseLight,van,[1.27,.92,-.75],[.28,1,.8]);
+    for(const [z,y] of [[-.86,1.02],[-.68,1.04],[-.77,1.16]])addMesh(new THREE.SphereGeometry(.043,8,7),mats.roseLight,van,[1.275,y,z],[.3,1,.8]);
+    // Saída de fumaça e pequenas partículas durante o movimento.
+    const exhaustPipe=addMesh(new THREE.CylinderGeometry(.052,.061,.19,12),mats.dark,van,[-.72,.51,-1.60]);exhaustPipe.rotation.x=Math.PI/2;
+    const exhaustPuffs=[];let exhaustClock=0;
+    const puffColors=['#fffaf2','#f9e1eb','#f5eee8','#ead9e9'];
+    // Fumaça da chaminé enquanto a casa se aproxima e após a chegada.
+    const chimneyPuffs=[];let chimneySmokeClock=0;
+    function spawnChimneyPuff(){
+      if(!deliveryHouse)return;
+      const radius=.055+Math.random()*.04;
+      const shades=['#fffaf4','#f8eceb','#eee9f0','#f8f3e8'];
+      const material=new THREE.MeshBasicMaterial({color:shades[Math.floor(Math.random()*shades.length)],transparent:true,opacity:.30,depthWrite:false});
+      const mesh=new THREE.Mesh(new THREE.SphereGeometry(1,10,8),material);
+      const chimneyPosition=deliveryHouse.localToWorld(new THREE.Vector3(.80,2.78,.42));
+      mesh.position.set(chimneyPosition.x+(Math.random()-.5)*.07,chimneyPosition.y,chimneyPosition.z+(Math.random()-.5)*.07);
+      mesh.scale.setScalar(radius);mesh.castShadow=false;mesh.receiveShadow=false;scene.add(mesh);
+      chimneyPuffs.push({mesh,age:0,life:1.8+Math.random()*.75,radius,vx:(Math.random()-.5)*.12,vy:.22+Math.random()*.12,vz:(Math.random()-.5)*.10});
+    }
+    function spawnExhaustPuff(){
+      const radius=.042+Math.random()*.026;
+      const material=new THREE.MeshBasicMaterial({color:puffColors[Math.floor(Math.random()*puffColors.length)],transparent:true,opacity:.30,depthWrite:false});
+      const mesh=new THREE.Mesh(new THREE.SphereGeometry(1,10,8),material);
+      const exhaustPosition=van.localToWorld(new THREE.Vector3(-.72,.53,-1.77));
+      mesh.position.set(exhaustPosition.x+(Math.random()-.5)*.07,exhaustPosition.y+Math.random()*.06,exhaustPosition.z);
+      mesh.scale.setScalar(radius);mesh.castShadow=false;mesh.receiveShadow=false;scene.add(mesh);
+      const rearward=new THREE.Vector3(0,0,-1).applyQuaternion(van.quaternion);
+      const puffSpeed=.72+Math.random()*.28;
+      exhaustPuffs.push({mesh,age:0,life:1.05+Math.random()*.25,radius,vx:rearward.x*puffSpeed+(Math.random()-.5)*.12,vy:.10+Math.random()*.16,vz:rearward.z*puffSpeed});
+    }
+
+    // Sombra sob a van.
+    const shadowMat=new THREE.MeshBasicMaterial({color:'#625363',transparent:true,opacity:.16,depthWrite:false});
+    const vanShadow=addMesh(new THREE.CircleGeometry(1.65,32),shadowMat,scene,[0,.018,0],[1.3,1,.88]);vanShadow.rotation.x=-Math.PI/2;vanShadow.castShadow=false;
+
+    // Paleta do céu de acordo com a hora local.
+    const paletteStops=[
+      {h:0,top:'#172544',mid:'#374365',bottom:'#71627d',glow:'#5a506f',fog:'#56516b',sun:'#a4b6e3',ground:'#718174',light:.5,stars:.96,icon:'☾',label:'céu da noite'},
+      {h:4.5,top:'#293a5e',mid:'#735977',bottom:'#bd8091',glow:'#b97889',fog:'#7a6477',sun:'#e5aeb0',ground:'#8e8a88',light:.72,stars:.72,icon:'☾',label:'antes do amanhecer'},
+      {h:6.3,top:'#a3c5df',mid:'#f2b9b8',bottom:'#ffe0b8',glow:'#ffd0af',fog:'#e7b9b0',sun:'#fff0d2',ground:'#b2c8a1',light:1.25,stars:.2,icon:'☼',label:'céu da manhã'},
+      {h:9,top:'#9ed2e8',mid:'#e4e8de',bottom:'#fff1d7',glow:'#fff1d4',fog:'#d6e1d4',sun:'#fff5dd',ground:'#aec89e',light:1.8,stars:0,icon:'☀',label:'manhã tranquila'},
+      {h:12.5,top:'#8fc2e8',mid:'#f0d5c6',bottom:'#fff2d8',glow:'#fff0d0',fog:'#d8dfd5',sun:'#fff4df',ground:'#b3c99f',light:2.1,stars:0,icon:'☀',label:'luz do meio-dia'},
+      {h:15.5,top:'#93afe0',mid:'#eeb8b0',bottom:'#f9d9bf',glow:'#fbd0b8',fog:'#dfbdb8',sun:'#ffe2c2',ground:'#bbc49c',light:1.8,stars:0,icon:'☀',label:'tarde dourada'},
+      {h:17.5,top:'#e18c94',mid:'#f2a68c',bottom:'#f8d7b7',glow:'#ffbf99',fog:'#e6a6a2',sun:'#ffcf9e',ground:'#b2a18f',light:1.5,stars:0,icon:'☼',label:'hora dourada'},
+      {h:19,top:'#95648e',mid:'#df898c',bottom:'#f3c1a9',glow:'#ffb392',fog:'#bd909e',sun:'#ffc1a0',ground:'#8e879b',light:1.0,stars:.1,icon:'☾',label:'céu de entardecer'},
+      {h:21,top:'#283b68',mid:'#675778',bottom:'#ad819c',glow:'#b57f9b',fog:'#645c7c',sun:'#d6a3bb',ground:'#7f8498',light:.6,stars:.64,icon:'☾',label:'azul da noite'},
+      {h:24,top:'#172544',mid:'#374365',bottom:'#71627d',glow:'#5a506f',fog:'#56516b',sun:'#a4b6e3',ground:'#718174',light:.5,stars:.96,icon:'☾',label:'céu da noite'}
+    ];
+    function hexRGB(hex){const x=hex.replace('#','');return[parseInt(x.slice(0,2),16),parseInt(x.slice(2,4),16),parseInt(x.slice(4,6),16)];}
+    function rgbHex(rgb){return'#'+rgb.map(v=>Math.round(Math.max(0,Math.min(255,v))).toString(16).padStart(2,'0')).join('');}
+    function blend(a,b,t){const aa=hexRGB(a),bb=hexRGB(b);return rgbHex(aa.map((v,i)=>v+(bb[i]-v)*t));}
+    function getPalette(hour){let a=paletteStops[0],b=paletteStops[paletteStops.length-1];for(let i=0;i<paletteStops.length-1;i++){if(hour>=paletteStops[i].h&&hour<=paletteStops[i+1].h){a=paletteStops[i];b=paletteStops[i+1];break;}}const f=(hour-a.h)/Math.max(.001,b.h-a.h);const p={};for(const k of ['top','mid','bottom','glow','fog','sun','ground'])p[k]=blend(a[k],b[k],f);p.light=a.light+(b.light-a.light)*f;p.stars=a.stars+(b.stars-a.stars)*f;const nearest=paletteStops.reduce((v,s)=>Math.abs(s.h-hour)<Math.abs(v.h-hour)?s:v,paletteStops[0]);p.icon=nearest.icon;p.label=nearest.label;return p;}
+    let previewHour=null;
+    const timeOptions=document.querySelector('#time-options');
+    const timePickerToggle=document.querySelector('#time-picker-toggle');
+    timePickerToggle.addEventListener('click',()=>{const opening=timeOptions.hidden;timeOptions.hidden=!opening;timePickerToggle.setAttribute('aria-expanded',String(opening));});
+    document.addEventListener('pointerdown',event=>{if(!event.target.closest('.time-picker')){timeOptions.hidden=true;timePickerToggle.setAttribute('aria-expanded','false');}});
+    document.querySelectorAll('.time-option').forEach(button=>button.addEventListener('click',()=>{
+      previewHour=button.dataset.hour==='now'?null:Number(button.dataset.hour);
+      document.querySelectorAll('.time-option').forEach(option=>option.setAttribute('aria-pressed',String(option===button)));
+      timeOptions.hidden=true;timePickerToggle.setAttribute('aria-expanded','false');updateSky();
+    }));
+    function updateSky(){const now=new Date();const realHour=now.getHours()+now.getMinutes()/60+now.getSeconds()/3600;const hour=previewHour===null?realHour:previewHour;const p=getPalette(hour);shell.style.setProperty('--sky-top',p.top);shell.style.setProperty('--sky-mid',p.mid);shell.style.setProperty('--sky-bottom',p.bottom);shell.style.setProperty('--sky-glow',p.glow);stars.style.opacity=String(p.stars);scene.fog.color.set(p.fog);mats.grass.color.set(p.ground);mats.grass2.color.set(blend(p.ground,'#e2dfb9',.34));hemisphere.intensity=.65+p.light*.55;hemisphere.groundColor.set(p.ground);sunlight.color.set(p.sun);sunlight.intensity=p.light;sunlight.position.set(-4+Math.sin(hour/24*Math.PI*2)*2,5+p.light*2,5);document.querySelector('#time-icon').textContent=p.icon;document.querySelector('#time-label').textContent=previewHour===null?p.label:p.label+' · prévia';document.querySelector('#clock-label').textContent=previewHour===null?now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}):String(Math.floor(hour)).padStart(2,'0')+':'+String(Math.round((hour%1)*60)).padStart(2,'0')+' · simulação';}
+    // O modo automático acompanha o horário local
+    // e atualiza o cenário quando a aba volta a ficar visível.
+    updateSky();window.setInterval(updateSky,15000);
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden&&previewHour===null)updateSky();});
+
+    // Câmera com rotação horizontal de 360° e inclinação vertical limitada.
+    let cameraAngle=Math.PI+.43;let cameraDistance=10.8;let cameraPolar=Math.acos(3.0/cameraDistance);const target=new THREE.Vector3(0,1.0,0);
+    function positionCamera(){
+      const horizontal=Math.sin(cameraPolar)*cameraDistance;
+      camera.position.set(target.x+Math.sin(cameraAngle)*horizontal,target.y+Math.cos(cameraPolar)*cameraDistance,target.z+Math.cos(cameraAngle)*horizontal);
+      camera.lookAt(target);
+    }
+    positionCamera();
+    function resize(){const w=wrap.clientWidth||window.innerWidth,h=wrap.clientHeight||window.innerHeight;camera.aspect=w/h;camera.fov=w<600?51:43;camera.updateProjectionMatrix();renderer.setSize(w,h,false);positionCamera();}
+    window.addEventListener('resize',resize);resize();
+
+    // Clique na van para escolher o pet; arraste para girar a câmera.
+    let pointerDown=false,lastX=0,lastY=0,downX=0,downY=0,pointerMoved=false;
+    const raycaster=new THREE.Raycaster();const pointer=new THREE.Vector2();
+    const petProfiles={
+      cat:{name:'Gato',icon:'🐱',article:'um gato',size:'Pequeno a médio',temperament:'Curioso, observador e sensível a mudanças.',transport:'Caixa de transporte segura, firme e bem ventilada.',care:'Ambiente calmo, manta familiar e caixa sempre fechada durante o trajeto.'},
+      dog:{name:'Cachorro',icon:'🐶',article:'um cachorro',size:'Varia conforme a raça',temperament:'Companheiro, sociável e atento ao ambiente.',transport:'Caixa adequada ou peitoral com cinto próprio para veículos.',care:'Faça paradas seguras para água e conforto em viagens mais longas.'},
+      guinea:{name:'Porquinho-da-índia',icon:'🐹',article:'um porquinho-da-índia',size:'Pequeno',temperament:'Gentil e sensível a barulhos, calor e movimentos bruscos.',transport:'Transportadora firme, ventilada e com forro macio absorvente.',care:'Mantenha temperatura estável, feno acessível e pouco ruído.'},
+      rabbit:{name:'Coelho',icon:'🐰',article:'um coelho',size:'Pequeno',temperament:'Gentil, atento e facilmente assustado por sons súbitos.',transport:'Caixa ventilada, estável e com base antiderrapante.',care:'Apoie bem o corpo e nunca o levante pelas orelhas.'}
+    };
+    let activePetId='cat';let confirmedPetId=null;
+    const petPicker=document.querySelector('#pet-picker');
+    function renderPetProfile(id){
+      activePetId=id;const p=petProfiles[id];
+      document.querySelector('#pet-profile-icon').textContent=p.icon;document.querySelector('#pet-name').textContent=p.name;
+      document.querySelector('#pet-subtitle').textContent=`${p.name.toLowerCase()} — passageiro muito especial ♡`;
+      document.querySelector('#pet-size').textContent=p.size;document.querySelector('#pet-temperament').textContent=p.temperament;
+      document.querySelector('#pet-transport').textContent=p.transport;document.querySelector('#pet-care').textContent=p.care;
+      document.querySelectorAll('.pet-option').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.pet===id)));
+      document.querySelector('#confirm-pet').textContent=confirmedPetId===id?'Pet escolhido ✓':'Escolher este pet ♡';
+    }
+    function openPetPicker(){document.querySelector('#intro-card').classList.add('dismissed');renderPetProfile(activePetId);petPicker.hidden=false;document.querySelector('#pet-close').focus();}
+    function closePetPicker(){petPicker.hidden=true;}
+    document.querySelectorAll('.pet-option').forEach(b=>b.addEventListener('click',()=>renderPetProfile(b.dataset.pet)));
+    document.querySelector('#pet-close').addEventListener('click',closePetPicker);
+    document.querySelector('#pet-scrim').addEventListener('click',e=>{if(e.target.id==='pet-scrim')closePetPicker();});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!petPicker.hidden)closePetPicker();});
+    const deliveryModal=document.querySelector('#delivery-modal');
+    const certificateIssueDate=document.querySelector('#certificate-date');
+    const certificateNumber=document.querySelector('#certificate-number');
+    const certificatePetName=document.querySelector('#certificate-pet-name');
+    const certificateFamilyLine=document.querySelector('#certificate-family-line');
+    const certificatePetIcon=document.querySelector('#certificate-pet-icon');
+    const certificatePetInput=document.querySelector('#certificate-pet-input');
+    const certificateFamilyInput=document.querySelector('#certificate-family-input');
+    let certificateId='';let certificateIssuedAt=new Date();
+    function refreshCertificatePreview(){
+      const p=petProfiles[confirmedPetId||activePetId];
+      const petName=certificatePetInput.value.trim()||p.name;
+      const family=certificateFamilyInput.value.trim();
+      certificatePetName.textContent=petName;
+      certificateFamilyLine.textContent=family?`com muito amor, para ${family}`:'e sua família cheia de amor';
+      certificatePetIcon.textContent=p.icon;
+    }
+    function openDeliveryCertificate(){
+      const p=petProfiles[confirmedPetId];
+      certificateIssuedAt=new Date();
+      const stamp=[certificateIssuedAt.getFullYear(),String(certificateIssuedAt.getMonth()+1).padStart(2,'0'),String(certificateIssuedAt.getDate()).padStart(2,'0')].join('');
+      certificateId=`VP-${stamp}-${String(Math.floor(1000+Math.random()*9000))}`;
+      certificateIssueDate.textContent=certificateIssuedAt.toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'});
+      certificateNumber.textContent=certificateId;
+      document.querySelector('#delivery-title').textContent='Certificado pronto! ♡';
+      document.querySelector('#delivery-copy').textContent=`O certificado de ${p.article} foi preparado com carinho. Depois, siga viagem até a casinha para concluir a entrega.`;
+      document.querySelector('#delivery-pet-icon').textContent=p.icon;
+      document.querySelector('#delivery-hero-title').textContent=`Certificado emitido: ${p.name}`;
+      document.querySelector('#delivery-hero-copy').textContent='Sua próxima parada é uma casinha cheia de carinho.';
+      document.querySelector('#continue-trip').textContent='Seguir até a casinha 🏡';
+      certificatePetInput.value='';certificateFamilyInput.value='';refreshCertificatePreview();
+      deliveryModal.hidden=false;document.querySelector('#delivery-close').focus();
+    }
+    function closeDeliveryCertificate(){deliveryModal.hidden=true;}
+    function removeDeliveryHouse(){
+      if(!deliveryHouse)return;
+      const index=scenery.indexOf(deliveryHouse);if(index>=0)scenery.splice(index,1);
+      scene.remove(deliveryHouse);deliveryHouse.traverse(o=>{if(o.geometry)o.geometry.dispose();});deliveryHouse=null;
+    }
+    function startDeliveryRoute(){
+      closeDeliveryCertificate();removeDeliveryHouse();
+      for(const prop of scenery)prop.visible=true;
+      const house=makeDeliveryHouse();
+      house.position.set(van.position.x-(ROAD_W/2+4.0),0,-39);
+      scene.add(house);scenery.push(house);deliveryHouse=house;
+      // Evita que a vegetação cubra a casa durante a aproximação.
+      for(const prop of scenery){
+        if(prop!==house&&!prop.userData.isDeliveryHouse&&prop.position.z<-28&&prop.position.z>-48&&Math.abs(prop.position.x-house.position.x)<2.5)prop.visible=false;
+      }
+      deliveryPhase='enroute';deliveryRouteActive=true;driving=true;paused=false;
+      pauseButton.textContent='Ⅱ pausar viagem';
+      document.querySelector('#trip-title').textContent='A caminho da casinha 🏡';
+      const p=petProfiles[confirmedPetId];
+      document.querySelector('#trip-copy').textContent=`Levando ${p.article} pela estrada até sua nova família.`;
+      showToast('Vamos levar o pet até a casinha! 🐾');
+    }
+    function finishDeliveryArrival(){
+      if(deliveryPhase!=='enroute')return;
+      deliveryRouteActive=false;deliveryPhase='arrived';driving=false;paused=false;
+      // Toca o som correspondente ao pet quando a entrega termina.
+      playPetFarewellSound(confirmedPetId);
+      const p=petProfiles[confirmedPetId];const petName=certificatePetInput.value.trim()||p.name;const family=certificateFamilyInput.value.trim();
+      document.querySelector('#trip-title').textContent='Chegamos à casinha! 🏡';
+      document.querySelector('#trip-copy').textContent=family?`${petName} chegou em segurança para ${family}.`:`${petName} chegou em segurança à sua nova família.`;
+      document.querySelector('#delivery-title').textContent='Entrega concluída! ♡';
+      document.querySelector('#delivery-copy').textContent=family?`A van chegou à casinha e ${petName} foi entregue com todo carinho para ${family}.`:`A van chegou à casinha e ${petName} foi recebido com todo carinho pela nova família.`;
+      document.querySelector('#delivery-hero-title').textContent=`Bem-vindo ao novo lar, ${petName}!`;
+      document.querySelector('#delivery-hero-copy').textContent='A viagem terminou; uma nova história começa agora.';
+      document.querySelector('#continue-trip').textContent='Voltar à estrada ♡';
+      pauseButton.textContent='▶ voltar à estrada';
+      deliveryModal.hidden=false;document.querySelector('#delivery-close').focus();
+      showToast('Entrega feita com carinho! 🏡');
+    }
+    function resumeAfterDelivery(){
+      deliveryModal.hidden=true;
+      if(deliveryPhase==='arrived'){
+        // A casa continua na cena quando a van volta a andar,
+        // afastando-se aos poucos em vez de desaparecer de repente.
+        deliveryPhase='departing';deliveryRouteActive=false;driving=true;paused=false;
+        pauseButton.textContent='Ⅱ pausar viagem';
+        document.querySelector('#trip-title').textContent='Voltando à estrada 🌿';
+        document.querySelector('#trip-copy').textContent='A casinha vai ficando para trás aos poucos enquanto a van continua sua viagem.';
+        document.querySelector('#continue-trip').textContent='Seguir viagem ♡';
+        for(const prop of scenery)prop.visible=true;
+        showToast('Até logo, casinha! Seguimos viagem ♡');
+      }else if(deliveryPhase==='certificate'){
+        startDeliveryRoute();
+      }
+    }
+    document.querySelector('#confirm-pet').addEventListener('click',()=>{
+      getFarewellAudioContext(); // Prepare audio while the browser is handling a user gesture.
+      confirmedPetId=activePetId;const p=petProfiles[confirmedPetId];deliveryPhase='certificate';
+      document.querySelector('#trip-title').textContent=`Preparando a entrega: ${p.name.toLowerCase()}`;
+      document.querySelector('#trip-copy').textContent='O certificado está pronto. Depois, a van seguirá até a casinha.';
+      closePetPicker();openDeliveryCertificate();showToast(`${p.name} escolhido para a entrega ♡`);
+    });
+    certificatePetInput.addEventListener('input',refreshCertificatePreview);
+    certificateFamilyInput.addEventListener('input',refreshCertificatePreview);
+    document.querySelector('#delivery-close').addEventListener('click',()=>{
+      if(deliveryPhase==='certificate')startDeliveryRoute();else closeDeliveryCertificate();
+    });
+    document.querySelector('#continue-trip').addEventListener('click',resumeAfterDelivery);
+    document.querySelector('#delivery-scrim').addEventListener('click',e=>{
+      if(e.target.id==='delivery-scrim'){
+        if(deliveryPhase==='certificate')startDeliveryRoute();else closeDeliveryCertificate();
+      }
+    });
+    document.addEventListener('keydown',e=>{
+      if(e.key==='Escape'&&!deliveryModal.hidden){if(deliveryPhase==='certificate')startDeliveryRoute();else closeDeliveryCertificate();}
+    });
+
+    document.querySelector('#download-certificate').addEventListener('click',async()=>{
+      const p=petProfiles[confirmedPetId||activePetId];const petName=certificatePetInput.value.trim()||p.name;const family=certificateFamilyInput.value.trim()||'uma família cheia de amor';
+      const canvas=document.createElement('canvas');canvas.width=1400;canvas.height=980;const ctx=canvas.getContext('2d');
+      if(!ctx){showToast('Não foi possível preparar o certificado neste navegador.');return;}
+      try{if(document.fonts?.ready)await document.fonts.ready;}catch(e){}
+      const bg=ctx.createLinearGradient(0,0,1400,980);bg.addColorStop(0,'#f6d8d8');bg.addColorStop(.52,'#fff0e5');bg.addColorStop(1,'#e4eee4');ctx.fillStyle=bg;ctx.fillRect(0,0,1400,980);
+      function roundedRect(x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();}
+      roundedRect(55,55,1290,870,38);ctx.fillStyle='#fffaf5';ctx.fill();ctx.lineWidth=3;ctx.strokeStyle='#d6a6b7';ctx.stroke();
+      roundedRect(72,72,1256,836,30);ctx.lineWidth=2;ctx.strokeStyle='#e8c8cf';ctx.stroke();
+      ctx.textAlign='center';ctx.fillStyle='#ad7792';ctx.font='500 20px "DM Mono", monospace';ctx.fillText('V A N   D A S   P A T I N H A S  ·  L E M B R A N Ç A   E S P E C I A L',700,145);
+      ctx.fillStyle='#8e5d7b';ctx.font='600 58px "Playfair Display", Georgia, serif';ctx.fillText('Certificado de Adoção',700,230);
+      ctx.fillStyle='#806f7d';ctx.font='24px "Nunito", sans-serif';ctx.fillText('Com carinho, celebramos o começo de uma nova história para',700,292);
+      ctx.font='66px "Apple Color Emoji", "Segoe UI Emoji", sans-serif';ctx.fillText(p.icon,700,390);
+      ctx.fillStyle='#654c62';ctx.font='600 54px "Playfair Display", Georgia, serif';let shownName=petName;while(ctx.measureText(shownName).width>1050&&shownName.length>3)shownName=shownName.slice(0,-2)+'…';ctx.fillText(shownName,700,475);
+      ctx.fillStyle='#927f8f';ctx.font='25px "Nunito", sans-serif';let familyText=`com muito amor, para ${family}`;while(ctx.measureText(familyText).width>1100&&familyText.length>3)familyText=familyText.slice(0,-2)+'…';ctx.fillText(familyText,700,526);
+      const line=ctx.createLinearGradient(250,0,1150,0);line.addColorStop(0,'#ffffff');line.addColorStop(.5,'#d8a3b5');line.addColorStop(1,'#ffffff');ctx.fillStyle=line;ctx.fillRect(300,568,800,2);
+      ctx.fillStyle='#8c7687';ctx.font='500 20px "DM Mono", monospace';ctx.fillText(`EMITIDO EM  ${certificateIssueDate.textContent}     ·     Nº  ${certificateId}`,700,625);
+      ctx.fillStyle='#ad9aa6';ctx.font='18px "Nunito", sans-serif';ctx.fillText('Que esta jornada seja cheia de cuidado, segurança e amor.',700,713);
+      ctx.font='15px "Nunito", sans-serif';ctx.fillText('Certificado afetivo comemorativo. Não substitui documentos oficiais de adoção ou transporte.',700,820);
+      ctx.fillStyle='#d9a2b6';ctx.font='30px serif';ctx.fillText('✿   ✧   ♡   ✧   ✿',700,865);
+      canvas.toBlob(blob=>{if(!blob){showToast('Falha ao gerar imagem. Tente novamente.');return;}const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`certificado-adocao-${p.name.toLowerCase().replace(/[^a-z0-9]+/g,'-')}.png`;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);showToast('Certificado salvo com carinho ♡');},'image/png');
+    });
+    if(confirmedPetId){const p=petProfiles[confirmedPetId];document.querySelector('#trip-title').textContent=`Entrega: ${p.name.toLowerCase()}`;document.querySelector('#trip-copy').textContent=`Levando ${p.article} com todo carinho. Clique na van para trocar o passageiro.`;}
+    renderer.domElement.addEventListener('pointerdown',e=>{pointerDown=true;lastX=e.clientX;lastY=e.clientY;downX=e.clientX;downY=e.clientY;pointerMoved=false;renderer.domElement.setPointerCapture?.(e.pointerId);renderer.domElement.style.cursor='grabbing';});
+    renderer.domElement.addEventListener('pointermove',e=>{
+      if(!pointerDown)return;
+      const dx=e.clientX-lastX,dy=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;
+      if(Math.hypot(e.clientX-downX,e.clientY-downY)>5)pointerMoved=true;
+      if(pointerMoved){cameraAngle+=dx*.005;cameraPolar=THREE.MathUtils.clamp(cameraPolar+dy*.004,.28,1.42);positionCamera();}
+    });
+    const releasePointer=e=>{
+      if(pointerDown&&!pointerMoved){const rect=renderer.domElement.getBoundingClientRect();pointer.x=((e.clientX-rect.left)/rect.width)*2-1;pointer.y=-((e.clientY-rect.top)/rect.height)*2+1;raycaster.setFromCamera(pointer,camera);if(raycaster.intersectObject(van,true).length)openPetPicker();}
+      pointerDown=false;renderer.domElement.style.cursor='grab';
+    };
+    renderer.domElement.addEventListener('pointerup',releasePointer);renderer.domElement.addEventListener('pointercancel',()=>{pointerDown=false;renderer.domElement.style.cursor='grab';});
+    renderer.domElement.style.cursor='grab';
+    renderer.domElement.addEventListener('wheel',e=>{e.preventDefault();cameraDistance=Math.max(8.4,Math.min(14,cameraDistance+Math.sign(e.deltaY)*.45));positionCamera();},{passive:false});
+
+    let last=performance.now(),elapsed=0,toastTimer=null,paused=false;
+    function showToast(msg){toast.textContent=msg;toast.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove('show'),2300);}
+
+    // Sons de despedida criados com Web Audio.
+    // O áudio é inicializado após uma interação do usuário, conforme as regras do navegador.
+    let farewellAudioContext=null;
+    function getFarewellAudioContext(){
+      try{
+        const AudioCtx=window.AudioContext||window.webkitAudioContext;
+        if(!AudioCtx)return null;
+        if(!farewellAudioContext)farewellAudioContext=new AudioCtx();
+        if(farewellAudioContext.state==='suspended')farewellAudioContext.resume().catch(()=>{});
+        return farewellAudioContext;
+      }catch(e){return null;}
+    }
+    function scheduleFarewellTone(ctx,{wave='sine',points,delay=0,duration=.22,volume=.10,filter=2600}){
+      const start=ctx.currentTime+delay;
+      const osc=ctx.createOscillator();
+      const amp=ctx.createGain();
+      const lowpass=ctx.createBiquadFilter();
+      lowpass.type='lowpass';lowpass.frequency.setValueAtTime(filter,start);
+      osc.type=wave;
+      if(points&&points.length){
+        osc.frequency.setValueAtTime(Math.max(1,points[0][1]),start+points[0][0]);
+        for(let i=1;i<points.length;i++){
+          const [at,hz]=points[i];
+          osc.frequency.exponentialRampToValueAtTime(Math.max(1,hz),start+Math.min(duration-.015,Math.max(.005,at)));
+        }
+      }
+      amp.gain.setValueAtTime(.0001,start);
+      amp.gain.exponentialRampToValueAtTime(Math.max(.001,volume),start+.025);
+      amp.gain.setValueAtTime(Math.max(.001,volume),start+Math.max(.035,duration-.07));
+      amp.gain.exponentialRampToValueAtTime(.0001,start+duration);
+      osc.connect(lowpass);lowpass.connect(amp);amp.connect(ctx.destination);
+      osc.start(start);osc.stop(start+duration+.02);
+      osc.onended=()=>{try{osc.disconnect();lowpass.disconnect();amp.disconnect();}catch(e){}};
+    }
+    function playPetFarewellSound(petId){
+      const ctx=getFarewellAudioContext();if(!ctx)return;
+      const isCat=petId==='cat',isDog=petId==='dog',isGuinea=petId==='guinea';
+      if(isCat){
+        // Som de miado para a despedida do gato.
+        scheduleFarewellTone(ctx,{wave:'sawtooth',points:[[0,530],[.10,780],[.20,930],[.34,640],[.48,400]],duration:.52,volume:.075,filter:1700});
+        scheduleFarewellTone(ctx,{wave:'triangle',points:[[0,1060],[.12,1560],[.30,1150],[.46,780]],duration:.50,volume:.025,filter:2600});
+      }else if(isDog){
+        // Dois latidos curtos para a despedida do cachorro.
+        scheduleFarewellTone(ctx,{wave:'sawtooth',points:[[0,190],[.055,125],[.12,82]],delay:0,duration:.15,volume:.11,filter:650});
+        scheduleFarewellTone(ctx,{wave:'triangle',points:[[0,145],[.055,95],[.12,68]],delay:.03,duration:.15,volume:.07,filter:520});
+        scheduleFarewellTone(ctx,{wave:'sawtooth',points:[[0,175],[.05,112],[.105,76]],delay:.23,duration:.14,volume:.09,filter:600});
+      }else if(isGuinea){
+        // Pequenos guinchos para a despedida do porquinho-da-índia.
+        scheduleFarewellTone(ctx,{wave:'sine',points:[[0,1050],[.07,1420],[.14,1180]],delay:0,duration:.17,volume:.075,filter:3000});
+        scheduleFarewellTone(ctx,{wave:'sine',points:[[0,1180],[.06,1570],[.13,1260]],delay:.19,duration:.16,volume:.07,filter:3200});
+        scheduleFarewellTone(ctx,{wave:'triangle',points:[[0,990],[.07,1310],[.13,1080]],delay:.39,duration:.16,volume:.055,filter:2800});
+      }else{
+        // Som curto para a despedida do coelho.
+        scheduleFarewellTone(ctx,{wave:'sine',points:[[0,760],[.07,540],[.13,660],[.20,430]],delay:0,duration:.23,volume:.06,filter:2200});
+        scheduleFarewellTone(ctx,{wave:'sine',points:[[0,690],[.08,470]],delay:.28,duration:.18,volume:.05,filter:2000});
+      }
+    }
+    document.querySelector('#hide-intro').addEventListener('click',()=>document.querySelector('#intro-card').classList.add('dismissed'));
+    const pauseButton=document.querySelector('#pause-button');
+    pauseButton.addEventListener('click',()=>{
+      if(deliveryPhase==='arrived'){resumeAfterDelivery();return;}
+      paused=!paused;driving=!paused;pauseButton.textContent=paused?'▶ continuar viagem':'Ⅱ pausar viagem';
+      if(deliveryRouteActive){
+        document.querySelector('#trip-title').textContent=paused?'Viagem pausada 🐾':'A caminho da casinha 🏡';
+        document.querySelector('#trip-copy').textContent=paused?'A van fez uma pequena pausa antes de chegar ao novo lar.':'Retomamos o caminho para concluir a entrega.';
+      }else{
+        document.querySelector('#trip-title').textContent=paused?'Uma pausa para cafuné':'A caminho de novas sonecas';
+        document.querySelector('#trip-copy').textContent=paused?'A van parou num lugar seguro. Os passageiros estão descansando.':'A estrada nasce logo ali, e todo mundo está confortável.';
+      }
+      showToast(paused?'Pausa para um carinho ♡':'Voltamos à estrada!');
+    });
+    document.querySelector('#horn-button').addEventListener('click',()=>{
+      try{const AudioCtx=window.AudioContext||window.webkitAudioContext;if(AudioCtx){const ctx=new AudioCtx();const osc=ctx.createOscillator();const gain=ctx.createGain();osc.type='sine';osc.frequency.setValueAtTime(520,ctx.currentTime);osc.frequency.exponentialRampToValueAtTime(690,ctx.currentTime+.12);gain.gain.setValueAtTime(.0001,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.12,ctx.currentTime+.025);gain.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.23);osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+.24);osc.onended=()=>ctx.close();}}catch(e){}showToast('Bip-bip! Oi, amiguinhos 🐾');
+    });
+
+    const animate=now=>{
+      requestAnimationFrame(animate);const dt=Math.min(.05,(now-last)/1000||0);last=now;elapsed+=dt;
+      if(driving){
+        // A estrada se move sob a van para simular o avanço.
+        exhaustClock+=dt;if(exhaustClock>.19){exhaustClock=0;spawnExhaustPuff();if(Math.random()>.55)spawnExhaustPuff();}
+        for(const seg of roadSegments)seg.position.z+=speed*dt;
+        while(roadSegments.length&&roadSegments[0].position.z>SEG){
+          const passed=roadSegments.shift();disposeRoadSegment(passed);
+          const tailSeg=roadSegments[roadSegments.length-1];const near=tailSeg.userData.farX;const far=trackCenter(++nextPathIndex);
+          roadSegments.push(makeRoadSegment(near,far,tailSeg.position.z-SEG));
+        }
+        // Mantém a van alinhada ao trecho da estrada sob ela.
+        const roadUnderVan=roadSegments.find(seg=>seg.position.z>=-.001&&seg.position.z<=SEG+.001);
+        if(roadUnderVan){
+          const t=THREE.MathUtils.clamp(roadUnderVan.position.z/SEG,0,1);
+          const roadX=roadUnderVan.userData.nearX+(roadUnderVan.userData.farX-roadUnderVan.userData.nearX)*t;
+          van.position.x=roadX;van.rotation.y=Math.atan2(roadUnderVan.userData.farX-roadUnderVan.userData.nearX,-SEG);
+          vanShadow.position.x=roadX;
+        }
+        for(const prop of scenery){
+          if(prop.userData.isDeliveryHouse){
+            if(deliveryRouteActive){
+              prop.position.x=van.position.x-(ROAD_W/2+4.0);
+              prop.position.z+=speed*dt;
+              if(prop.position.z>=-.35)finishDeliveryArrival();
+            }else if(deliveryPhase==='departing'){
+              // Após a entrega, a casa continua se afastando
+              // junto com o restante do cenário.
+              prop.position.z+=speed*dt;
+            }
+            continue;
+          }
+          prop.position.z+=speed*dt;
+          if(prop.position.z>14){const minZ=Math.min(...scenery.filter(p=>!p.userData.isDeliveryHouse).map(p=>p.position.z));prop.position.z=minZ-8-Math.random()*15;const side=prop.position.x<0?-1:1;prop.position.x=side*(3.8+Math.random()*5.2);prop.visible=true;}
+        }
+        // Remove a casa apenas quando ela já passou da câmera.
+        if(deliveryHouse&&deliveryPhase==='departing'&&deliveryHouse.position.z>14){
+          removeDeliveryHouse();deliveryPhase='idle';
+        }
+        for(const cloud of clouds){cloud.position.x+=dt*.20;if(cloud.position.x>17)cloud.position.x=-17;}
+        for(const w of wheelPivots)w.rotation.x-=speed*dt/0.39;
+        van.position.y=.025+Math.sin(elapsed*4.1)*.035;van.rotation.z=Math.sin(elapsed*1.6)*.012;
+      }else{van.position.y=.025+Math.sin(elapsed*1.4)*.012;}
+      // A grama continua balançando suavemente durante a pausa.
+      for(const bladePivot of grassPivots){
+        const phase=bladePivot.userData.windPhase;
+        bladePivot.rotation.z=bladePivot.userData.baseAngle+Math.sin(elapsed*.72+phase)*bladePivot.userData.windAmount;
+        bladePivot.rotation.x=Math.cos(elapsed*.48+phase*.73)*.035;
+      }
+      // As partículas da fumaça se afastam, sobem e desaparecem.
+      for(let i=exhaustPuffs.length-1;i>=0;i--){
+        const puff=exhaustPuffs[i];puff.age+=dt;const t=Math.min(1,puff.age/puff.life);
+        puff.mesh.position.x+=puff.vx*dt;puff.mesh.position.y+=puff.vy*dt;puff.mesh.position.z+=puff.vz*dt;
+        puff.mesh.scale.setScalar(puff.radius*(1+t*1.45));puff.mesh.material.opacity=.28*(1-t);
+        if(t>=1){scene.remove(puff.mesh);puff.mesh.geometry.dispose();puff.mesh.material.dispose();exhaustPuffs.splice(i,1);}
+      }
+      // A fumaça da chaminé continua subindo após a chegada.
+      if(deliveryHouse){chimneySmokeClock+=dt;if(chimneySmokeClock>.52){chimneySmokeClock=0;spawnChimneyPuff();if(Math.random()>.62)spawnChimneyPuff();}}
+      for(let i=chimneyPuffs.length-1;i>=0;i--){
+        const puff=chimneyPuffs[i];puff.age+=dt;const t=Math.min(1,puff.age/puff.life);
+        puff.mesh.position.x+=puff.vx*dt;puff.mesh.position.y+=puff.vy*dt;puff.mesh.position.z+=puff.vz*dt;
+        puff.mesh.scale.setScalar(puff.radius*(1+t*2.1));puff.mesh.material.opacity=.27*(1-t);
+        if(t>=1){scene.remove(puff.mesh);puff.mesh.geometry.dispose();puff.mesh.material.dispose();chimneyPuffs.splice(i,1);}
+      }
+      renderer.render(scene,camera);
+    };
+    requestAnimationFrame(animate);
+  }catch(err){
+    const panel=document.querySelector('#load-error');panel.hidden=false;document.querySelector('#load-error-detail').textContent=String(err&&err.message?err.message:err);console.error('Van das Patinhas:',err);
+  }
+}
+startTrip();
+</script>
+</body>
+</html>
